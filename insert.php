@@ -5,13 +5,13 @@
 
 		<h2>Create new item</h2>
 		<p>Title</p>
-		<input name="name"></input>
+		<input name="title"></input>
 		<p>Description</p>
-		<input name="value1"></input>
+		<input name="description"></input>
 		<p>Price</p>
-		<input name="value2"></input>
+		<input name="price"></input>
 
-		<input type="file" name="my_file" />
+		<input type="file" name="image" />
 		<br/>
 		<br/>
 		<input type="submit" name="submit" value="Upload"/>
