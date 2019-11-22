@@ -19,7 +19,8 @@
 	}
 
 	//GET return
-	$query = "SELECT * FROM merchandise";
+	$id = $_GET['id'];
+	$query = "SELECT * FROM merchandise WHERE id = '$id'";
 
 	if ($result = mysqli_query($connection, $query)) {
 		$post_arr = array();
