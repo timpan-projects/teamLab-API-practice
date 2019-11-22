@@ -55,7 +55,7 @@
 	//Get POST body
 	$body = json_decode(file_get_contents('php://input'), true);
 
-	$id = getGUID();
+	$id = $body['id'];
 	$title = $body['title'];
 	$description = $body['description'];
 	$price = $body['price'];
@@ -76,11 +76,11 @@
 	if($connection)
 	{
 		echo "Connection success!<br>";
-		echo"Inserting new data into database...<br>";
-		$sql = "INSERT INTO merchandise (id, title, description, price, image_path) VALUES ('$id', '$title', '$description', '$price', '$image_path')";
+		echo"Updating record in database...<br>";
+		$sql = "UPDATE merchandise SET title = '$title', description = '$description', price = '$price', image_path = '$image_path' WHERE id = '$id'";
 		if ($connection->query($sql) === TRUE)
 		{
-   			echo "New record created successfully";
+   			echo "Record updated successfully";
 		}
 		else
 		{
@@ -92,21 +92,4 @@
 	   echo "db connection error because of".mysqli_connect_error()."<br>";
 	}
 	
-	function getGUID(){
-	    if (function_exists('com_create_guid')){
-	        return com_create_guid();
-	    }
-	    else {
-	        mt_srand((double)microtime()*10000);//optional for php 4.2.0 and up.
-	        $charid = strtoupper(md5(uniqid(rand(), true)));
-	        $hyphen = chr(45);// "-"
-	        $uuid = ''
-	            .substr($charid, 0, 8).$hyphen
-	            .substr($charid, 8, 4).$hyphen
-	            .substr($charid,12, 4).$hyphen
-	            .substr($charid,16, 4).$hyphen
-	            .substr($charid,20,12);
-	        return $uuid;
-	    }
-	}
 ?>

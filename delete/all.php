@@ -1,7 +1,6 @@
 <?php
 	//headers
 	header('Access-Control-Allow-Origin: *');
-	header('Content-Type: application/json');
 
 	//database connection
 	$host = '127.0.0.1';

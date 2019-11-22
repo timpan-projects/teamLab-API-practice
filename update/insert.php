@@ -42,8 +42,9 @@
 	}
 
 //POST record to api
-	$url = 'http://localhost/api/post/post.php';
+	$url = 'http://localhost/api/update/update.php';
 	$data = array(
+		'id' => $_POST['id'],
 		'title' => $_POST['title'],
 		'description' => $_POST['description'],
 		'price' => $_POST['price'],
