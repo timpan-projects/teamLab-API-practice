@@ -1,95 +1,79 @@
 <?php
 //Using POST body to upload record to database
-//Try and move image uploading to this phase afterwards...
-	//if ($_FILES["image"] != null) {
-	//	$target_dir = "../uploads/guests/";
-	//	if (!file_exists($target_dir)) {
-    //		mkdir($target_dir, 0777, true);
-	//	}
-	//	$target_file = $target_dir . basename($_FILES["image"]["name"]);
-	//	$uploadOk = 1;
-	//	$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-	//	// Check if image file is a actual image or fake image
-	//	if(isset($_POST["submit"])) {
-	//	    $check = getimagesize($_FILES["image"]["tmp_name"]);
-	//	    if($check !== false) {
-	//	        echo "File is an image - " . $check["mime"] . ".";
-	//	        $uploadOk = 1;
-	//	    } else {
-	//	        echo "File is not an image.";
-	//	        $uploadOk = 0;
-	//	    }
-	//	}
-	//}
-	
-	// Check if file already exists
-	//if (file_exists($target_file)) {
-	//    echo "Sorry, file already exists.";
-	//    $uploadOk = 0;
-	//}
-	//// Check file size
-	//if ($_FILES["fileToUpload"]["size"] > 500000) {
-	//    echo "Sorry, your file is too large.";
-	//    $uploadOk = 0;
-	//}
-	//// Allow certain file formats
-	//if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-	//&& $imageFileType != "gif" ) {
-	//    echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-	//    $uploadOk = 0;
-	//}
-
-
-	//// Check if $uploadOk is set to 0 by an error
-	//if ($uploadOk == 0)
-    //	echo "Sorry, your file was not uploaded.";
-	//// if everything is ok, try to upload file
-	//else {
-	//    if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-	//        echo "The file ". basename( $_FILES["image"]["name"]). " has been uploaded.";
-	//    } else {
-	//        echo "Sorry, there was an error uploading your file.";
-	//    }
-	//}
-	
 	//Get POST body
 	$body = json_decode(file_get_contents('php://input'), true);
+	$sql_var_update = "";
+	//Check variable
+	if (!isset($body['id']) || !isset($body['uploader']) || !isset($body['node_id'])) {
+		$response_arr['error'] = "Variable 'id', 'uploader', and 'node_id' are needed to perform a merchandise update.";
+		echo json_encode($response_arr);
+	}
+	else {
+		$id = $body['id'];
+		$uploader = $body['uploader'];
+		$node_id = $body['node_id'];
 
-	$id = $body['id'];
-	$title = $body['title'];
-	$description = $body['description'];
-	$price = $body['price'];
-	$image_path = '';
-	if ($body['image_path'] != null)
-		$image_path = 'uploads/guests/' . $body['image_path'];
-	//'uploads/guests/' . basename( $_FILES["image"]["name"]);
-	//round(microtime(true) * 1000); //use timestamp as image name, combine username after login control
+		if (isset($body['title'])) {
+			$title = $body['title'];
+			$sql_var_update = $sql_var_update . "title = '$title'";
+		}
+		if (isset($body['description'])) {
+			$description = $body['description'];
+			$sql_var_update = $sql_var_update . ", description = '$description'";
+		}
+		if (isset($body['price'])) {
+			$price = $body['price'];
+			$sql_var_update = $sql_var_update . ", price = '$price'";
+		}
+		if (isset($body['image_path'])) {
+			if (isset($body['uploader']) && $body['uploader'] != "") {
+				$image_path = 'uploads/' . $body['uploader'] . "/" . $body['image_path'];
+			}
+			else {
+				$image_path = 'uploads/guests/' . $body['image_path'];
+			}
+			$sql_var_update = $sql_var_update . ", image_path = '$image_path'";
+		}
+
+		//database connection
+		$host = '127.0.0.1';
+		$user = 'root';
+		$password = '';
+		$db ='teamlab_practice';
+		
+		$connection = mysqli_connect($host,$user,$password,$db);
+		if($connection) {
+			//Check uploader and node_id
+			$query_check = "SELECT * FROM merchandise WHERE id = '$id'";
 	
-	//database connection
-	$host = '127.0.0.1';
-	$user = 'root';
-	$password = '';
-	$db ='teamlab_practice';
-	
-	$connection = mysqli_connect($host,$user,$password,$db);
-	echo "<br>Establishing database connection...<br>";
-	if($connection)
-	{
-		echo "Connection success!<br>";
-		echo"Updating record in database...<br>";
-		$sql = "UPDATE merchandise SET title = '$title', description = '$description', price = '$price', image_path = '$image_path' WHERE id = '$id'";
-		if ($connection->query($sql) === TRUE)
-		{
-   			echo "Record updated successfully";
+			if ($result = mysqli_query($connection, $query_check)) {
+				$obj = mysqli_fetch_object($result);
+				if ($obj->uploader ==  $uploader && $obj->node_id == $node_id) {
+					//Check passed, upload record
+					$sql = "UPDATE merchandise SET " . $sql_var_update ." WHERE id = '$id'";
+					if ($connection->query($sql) === TRUE) {
+   						$response_arr['result'] = "Record updated successfully";
+						echo json_encode($response_arr);
+					}
+					else {
+						$response_arr['error'] = "SQL error (" . $sql . "): " . $connection->error;
+						echo json_encode($response_arr);
+					}
+				}
+				else {
+					$response_arr['error'] = "You cannot update merchandise uploaded by other users.";
+					echo json_encode($response_arr);
+				}
+			}
+			else {
+				$response_arr['error'] = "SQL error (" . $query_check . "): " . $connection->error;
+				echo json_encode($response_arr);
+			}	
 		}
 		else
 		{
-		    echo "Error: " . $sql . "<br>" . $connection->error;
+		 	$response_arr['error'] = "Database connection error: ".mysqli_connect_error();
+			echo json_encode($response_arr);
 		}
 	}
-	else
-	{
-	   echo "db connection error because of".mysqli_connect_error()."<br>";
-	}
-	
 ?>

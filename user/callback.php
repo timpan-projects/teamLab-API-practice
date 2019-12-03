@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<body>
-		<a href='http://localhost/api/user/login.php'>Login</a>
+		<a href='https://910a6259.ngrok.io/api/user/login.php'>Login</a>
+		<!--<a href='https://910a6259.ngrok.io/api/user/login.php'>Login</a>-->
 		<br/>
 		<br/>
 		<?php
@@ -33,7 +34,8 @@
 
 	$code = $_GET['code'];
 	if ($code == "") {
-		header('Location: http://localhost:80/api/user/login.php');
+		header('Location: https://910a6259.ngrok.io/api/user/login.php');
+		//header('Location: https://b8bafcaa.ngrok.io/api/user/login.php');
 		exit;
 	}
 
@@ -61,8 +63,8 @@
 	if ($result->access_token != "") {
 		session_start();
 		$_SESSION['my_access_token_accessToken'] = $result->access_token;
-
-		header('Location: http://localhost:80/api/user/profile.php');
+		header('Location: https://910a6259.ngrok.io/api/user/profile.php');
+		//header('Location: https://b8bafcaa.ngrok.io/api/user/profile.php');
 		exit;
 	}
 

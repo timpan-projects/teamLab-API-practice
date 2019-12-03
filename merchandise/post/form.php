@@ -5,11 +5,11 @@
 
 		<h2>Create new item</h2>
 		<p>Title</p>
-		<input name="title"></input>
+		<input name="title" maxlength='100'></input>
 		<p>Description</p>
-		<input name="description"></input>
+		<input name="description" maxlength='500'></input>
 		<p>Price</p>
-		<input name="price"></input>
+		<input name="price" type="number" min="0"></input>
 		<br/><br/>
 		<input type="file" name="image" />
 		<br/><br/>

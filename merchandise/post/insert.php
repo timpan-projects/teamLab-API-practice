@@ -1,6 +1,17 @@
 <?php
-//Upload image
-	$target_dir = "../uploads/guests/";
+	session_start();
+	if (isset($_SESSION['login']) && isset($_SESSION['node_id'])) {
+		$login = $_SESSION['login'];
+		$node_id = $_SESSION['node_id'];
+		$target_dir = "../uploads/" . $_SESSION['login'] . "/";
+	}
+	else {
+		$login = "";
+		$node_id = "";
+		$target_dir = "../uploads/guests/";
+	}
+
+	//Upload image
 	if(!file_exists($_FILES['image']['tmp_name']) || !is_uploaded_file($_FILES['image']['tmp_name'])) {
 	    $image_file_basename = '';
 	    echo 'No image uploaded';
@@ -27,6 +38,17 @@
 		        $uploadOk = 0;
 		    }
 		}
+		// Check file size
+		if ($_FILES["image"]["size"] > 2000000) {
+		    echo "Sorry, your file is too large.";
+		    $uploadOk = 0;
+		}
+		// Allow certain file formats
+		if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+		&& $imageFileType != "gif" ) {
+		    echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+		    $uploadOk = 0;
+		}
 
 		if ($uploadOk == 0)
 	    	echo "Sorry, your file was not uploaded.";
@@ -41,13 +63,16 @@
 		}
 	}
 
-//POST record to api
-	$url = 'http://localhost/api/post/post.php';
+	//POST record to api
+	$url = 'https://910a6259.ngrok.io/api/merchandise/post/post.php';
+	//$url = 'https://b8bafcaa.ngrok.io/api/merchandise/post/post.php';
 	$data = array(
 		'title' => $_POST['title'],
 		'description' => $_POST['description'],
 		'price' => $_POST['price'],
-		'image_path' => $image_file_basename
+		'image_path' => $image_file_basename,
+		'uploader' => $login,
+		'node_id' => $node_id
 	);
 	
 	$data_string = json_encode($data);
@@ -59,4 +84,13 @@
 	$result = curl_exec($ch);	
 	curl_close($ch);	
 	echo "$result";
+
+	echo "<br/><br/><a href = 'https://910a6259.ngrok.io/api/merchandise/post/form.php'>Create another merchandise</a>";
+	if (isset($_SESSION['login']) && isset($_SESSION['node_id'])) {
+		echo "<br/><br/><a href = 'https://910a6259.ngrok.io/api/user/profile.php'>Return to profile page</a>";
+	}
+	else {
+		echo "<br/><br/><a href = 'https://910a6259.ngrok.io/api/user/login.php'>Go to Login page</a>";
+	}
+	
 ?>
