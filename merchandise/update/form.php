@@ -4,7 +4,7 @@
 		<form name="form" method="post" action="insert.php" enctype="multipart/form-data" >
 		<?php
 			if (isset($_GET['id'])) {
-				$url = 'https://910a6259.ngrok.io/api/merchandise/get/single.php?id=' . $_GET['id'];
+				$url = 'http://localhost:80/api/merchandise/get/single.php?id=' . $_GET['id'];
 	
 				$ch = curl_init($url);
 				curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));	

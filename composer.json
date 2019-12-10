@@ -1,0 +1,6 @@
+{
+    "name": "vendor/api",
+    "require": {
+        "rbdwllr/reallysimplejwt": "^2.1"
+    }
+}
