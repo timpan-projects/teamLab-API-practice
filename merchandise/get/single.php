@@ -20,7 +20,7 @@
 			echo json_encode($response_arr);
 		}
 		else {
-			if (!isset($_SERVER['HTTP_ID']) || $_SERVER['HTTP_ID'] == "") {
+			if (!isset($_GET['id']) || $_GET['id'] == "") {
 				$response_arr['error'] = "Missing variable: 'id'";
 				echo json_encode($response_arr);
 			}
@@ -34,7 +34,7 @@
 				$connection = mysqli_connect($host,$user,$password,$db);
 				if($connection) {
 					//GET return
-					$id = $_SERVER['HTTP_ID'];
+					$id = $_GET['id'];
 					$query = "SELECT * FROM merchandise WHERE id = '$id'";
 				
 					if ($result = mysqli_query($connection, $query)) {
