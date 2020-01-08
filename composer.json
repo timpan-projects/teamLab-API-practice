@@ -1,5 +1,5 @@
 {
-    "name": "vendor/api",
+    "name": "panchunting/api",
     "require": {
         "rbdwllr/reallysimplejwt": "^2.1"
     }

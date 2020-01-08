@@ -1,11 +1,11 @@
 <?php
 	use ReallySimpleJWT\Token;
 	require '../../vendor/autoload.php';
+	$secret = file_get_contents('../../jwt_secret.txt', FILE_USE_INCLUDE_PATH);
+	
 	//headers
 	header('Access-Control-Allow-Origin: *');
 	header('Content-Type: application/json');
-	
-	$secret = 'Hello&MikeFooBar123';
 
 	//Check variables
 	if (!isset($_SERVER['HTTP_JWT']) || $_SERVER['HTTP_JWT'] == "") {

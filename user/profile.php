@@ -39,7 +39,7 @@
 					require '../vendor/autoload.php';
 
 					$userId = 12;
-					$secret = 'Hello&MikeFooBar123';
+					$secret = file_get_contents('../jwt_secret.txt', FILE_USE_INCLUDE_PATH);
 					$expiration = time() + 3600;
 					$issuer = 'localhost';
 					
@@ -73,7 +73,9 @@
 				$url = 'http://localhost:80/api/merchandise/get/general.php?factor=' . $factor . '&value=' . $value;
 
 				$ch = curl_init($url);
-				curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));	
+				$jwt_string = 'jwt:' . $_SESSION['jwt'];
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json', $jwt_string));
+
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);	
 				$list = curl_exec($ch);	
 				curl_close($ch);	
