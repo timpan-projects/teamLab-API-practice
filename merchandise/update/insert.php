@@ -3,7 +3,7 @@
 	if (!(isset($_SESSION['login']) && isset($_SESSION['node_id']))) {
 		echo "<h2>Login required.</h2>";
 		echo "<p>Update function is only available for logged-in users to modify their own merchandise.</p>";
-		echo "<a href = 'https://910a6259.ngrok.io/api/user/login.php'>Redirect to login page</a>";
+		echo "<a href = 'http://localhost:80/api/user/login.php'>Redirect to login page</a>";
 	}
 	else {
 		$login = $_SESSION['login'];
@@ -66,7 +66,7 @@
 		
 		
 		//POST record to api
-		$url = 'https://910a6259.ngrok.io/api/merchandise/update/update.php';
+		$url = 'http://localhost:80/api/merchandise/update/update.php';
 		//$url = 'https://b8bafcaa.ngrok.io/api/merchandise/update/update.php';
 		$data = array();
 		$data['id'] = $_POST['id'];
@@ -83,14 +83,15 @@
 		}
 
 		$data_string = json_encode($data);
-		var_dump($data);
+		//var_dump($data);
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));	
+		$jwt_string = 'jwt:' . $_SESSION['jwt'];
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json', $jwt_string));
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);	
 		$result = curl_exec($ch);	
 		curl_close($ch);	
 		echo "$result";
-		echo "<br/><br/><a href = 'https://910a6259.ngrok.io/api/user/profile.php'>Return to profile page</a>";
+		echo "<br/><br/><a href = 'http://localhost:80/api/user/profile.php'>Return to profile page</a>";
 	}
 ?>

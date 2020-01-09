@@ -1,0 +1,6 @@
+{
+    "name": "panchunting/api",
+    "require": {
+        "rbdwllr/reallysimplejwt": "^2.1"
+    }
+}

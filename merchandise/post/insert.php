@@ -64,7 +64,7 @@
 	}
 
 	//POST record to api
-	$url = 'https://910a6259.ngrok.io/api/merchandise/post/post.php';
+	$url = 'http://localhost:80/api/merchandise/post/post.php';
 	//$url = 'https://b8bafcaa.ngrok.io/api/merchandise/post/post.php';
 	$data = array(
 		'title' => $_POST['title'],
@@ -79,18 +79,19 @@
 	
 	$ch = curl_init($url);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-	curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));	
+	$jwt_string = 'jwt:' . $_SESSION['jwt'];
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json', $jwt_string));
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);	
 	$result = curl_exec($ch);	
 	curl_close($ch);	
 	echo "$result";
 
-	echo "<br/><br/><a href = 'https://910a6259.ngrok.io/api/merchandise/post/form.php'>Create another merchandise</a>";
+	echo "<br/><br/><a href = 'http://localhost:80/api/merchandise/post/form.php'>Create another merchandise</a>";
 	if (isset($_SESSION['login']) && isset($_SESSION['node_id'])) {
-		echo "<br/><br/><a href = 'https://910a6259.ngrok.io/api/user/profile.php'>Return to profile page</a>";
+		echo "<br/><br/><a href = 'http://localhost:80/api/user/profile.php'>Return to profile page</a>";
 	}
 	else {
-		echo "<br/><br/><a href = 'https://910a6259.ngrok.io/api/user/login.php'>Go to Login page</a>";
+		echo "<br/><br/><a href = 'http://localhost:80/api/user/login.php'>Go to Login page</a>";
 	}
 	
 ?>
