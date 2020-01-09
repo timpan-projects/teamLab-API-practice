@@ -14,7 +14,7 @@
 	//Upload image
 	if(!file_exists($_FILES['image']['tmp_name']) || !is_uploaded_file($_FILES['image']['tmp_name'])) {
 	    $image_file_basename = '';
-	    echo 'No image uploaded';
+	    //echo 'No image uploaded';
 	}
 	else {
 		$image_file_basename = basename($_FILES["image"]["name"]);
@@ -30,7 +30,7 @@
 		    $check = getimagesize($_FILES["image"]["tmp_name"]);
 
 		    if ($check !== false) {
-		        echo "File is an image - " . $check["mime"] . ".";
+		        //echo "File is an image - " . $check["mime"] . ".";
 		        $uploadOk = 1;
 		    }
 		    else {
@@ -55,7 +55,7 @@
 		// if everything is ok, try to upload file
 		else {
 		    if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-		        echo "The file ". $image_file_basename . " has been uploaded.";
+		        //echo "The file ". $image_file_basename . " has been uploaded.";
 		    }
 		    else {
 		        echo "Sorry, there was an error uploading your file.";

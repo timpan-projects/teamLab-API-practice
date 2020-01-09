@@ -10,8 +10,6 @@
 				//echo "<br/><br/><a href='https://b8bafcaa.ngrok.io/api/user/login.php'>Link to the Login Page</a>";
 			}
 			else {
-				echo "You are logged in.";
-				echo "<br/><a href='http://localhost:80/api/user/logout.php'>Link to the Log Out Page</a>";
 				//echo "<br/><br/><a href='https://b8bafcaa.ngrok.io/api/user/logout.php'>Link to the Log Out Page</a>";
 				//echo "<br/><br/>Access token: " . $_SESSION['my_access_token_accessToken'] . "</br></br>";
 
@@ -45,13 +43,13 @@
 					
 					$token = Token::create($userId, $secret, $expiration, $issuer);
 					$_SESSION['jwt'] = $token;
-					echo "<br/>JWT token for testing: " . $token;
+					//echo $token;
 				}
 
 				//Greet user
 				$login = $result->login;
-				echo "<h2>Welcome back! " . $login . "</h2>";
-
+				echo "<h2>Welcome! " . $login . "</h2>";
+				echo "<a href='http://localhost:80/api/user/logout.php'>Logout</a><br/>";
 				//Show user profile photo
 				$avatar_url = $result->avatar_url;
 				echo "<h2>Profile Photo</h2>";
@@ -63,11 +61,10 @@
 				echo "<a href='" . $html_url . "'>Click here!</a>)</p>";
 
 				//Create item page
-				echo "<p>How about creating a new merchandise? ";
-				echo "<a href='http://localhost:80/api/merchandise/post/form.php'>Click here!</a></p>";
+				echo "<a href='http://localhost:80/api/merchandise/post/form.php'>Create new merchandise</a></p>";
 
 				//GET merchandise list via API
-				echo "<h2>Uploaded Merchandise</h2>";
+				echo "<h2>Uploaded Merchandises</h2>";
 				$factor = 'node_id';
 				$value = $_SESSION['node_id'];
 				$url = 'http://localhost:80/api/merchandise/get/general.php?factor=' . $factor . '&value=' . $value;
@@ -84,8 +81,10 @@
 				$jObj = json_decode($list);
 				for ($item_count = 0; $item_count < $jObj->count; $item_count++) {
 					$item = $jObj->data[$item_count];
-					echo "<p>======================================</p>";
+
 					echo "<a href='http://localhost:80/api/merchandise/update/form.php?id=" . ($item->id) ."'>Edit Merchandise</a>";
+					echo "</br>";
+					echo "<a href='http://localhost:80/api/merchandise/delete/single.php?id=" . ($item->id) ."'>Delete Merchandise</a>";
 					echo "<div><h3>Title: </h3>";
 					echo "<p>" . ($item->title) . "</p>";
 					echo "<h3>Merchandise ID: </h3>";
@@ -103,9 +102,8 @@
 						echo "<img width='300' src='http://localhost:80/api/merchandise/" . $item->image_path . "'/></div>";
 					else
 						echo "<p>[No Image]</p>";
-					
-				}				
-				echo "<p>======================================</p>";
+					echo "<p>======================================</p>";
+				}
 			}
 		?>
 
