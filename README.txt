@@ -1,1 +1,2 @@
 - 2019/12/10 branch: part3-JWT created
+- 2021/04/28 run "composer install" under api/ directory to install composer for this project
